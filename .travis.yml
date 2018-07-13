@@ -1,0 +1,27 @@
+language: node_js
+node_js: stable
+
+# S: Build Lifecycle
+install:
+  - npm install
+
+script:
+  - hexo cl
+  - hexo g
+
+after_script:
+  - cd ./public
+  - git init
+  - git config user.name "ammeyjohn"
+  - git config user.email "ammeyjohn@qq.com"
+  - git add .
+  - git commit -m "Update docs"
+  - git push --force --quiet "https://${REPO_TOKEN}@${REPO_REF}" master:master
+# E: Build LifeCycle
+
+branches:
+  only:
+    - master
+env:
+ global:
+   - REPO_REF: github.com/ammeyjohn/ammeyjohn.github.io.git
