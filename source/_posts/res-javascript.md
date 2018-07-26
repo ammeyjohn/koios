@@ -61,7 +61,7 @@ Chance 在 GitHub 上的 Star 超过 3200，一个简单的随机对象生成器
 ### 图表库
 
 + ChartJS - [https://github.com/chartjs/Chart.js](https://github.com/chartjs/Chart.js)
-在 GitHub 上的 Star 将近 40,000 个，提供了 8 种不同类型的数据可视化，每种类型都支持动画和定制。借助 Chart.js，我们可以使用<canvas>标签创建简单的HTML5图表，而且在所有现代浏览器中都具有出色的渲染性能。
+在 GitHub 上的 Star 将近 40,000 个，提供了 8 种不同类型的数据可视化，每种类型都支持动画和定制。借助Chart.js，我们可以使用<canvas>标签创建简单的HTML5图表，而且在所有现代浏览器中都具有出色的渲染性能。
 
 ## Gist
 
