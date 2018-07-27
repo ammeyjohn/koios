@@ -1,6 +1,7 @@
 ---
 title: 资源收集 - Crack
 tags: [资源,破解,Microsoft,Visual Studio]
+categories: 资源
 ---
 
 ## Microsoft

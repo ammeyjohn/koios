@@ -1,6 +1,7 @@
 ---
 title: Microservice - Consul
 tags: [Microservice,Consul,微服务]
+categories: 微服务
 date: 2018-7-26 21:19:28
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: 资源收集 - Javascript
 tags: [资源,网站,开源,Javascript,基础库,日期,字符串,CSS,函数式,数学,测试,图形,图表,代码段]
+categories: 资源
 ---
 
 ## 基础库
