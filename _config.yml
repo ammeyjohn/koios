@@ -84,3 +84,9 @@ deploy:
   type: git
   repo: https://github.com/ammeyjohn/ammeyjohn.github.io.git
   branch: master
+
+# Math
+math:
+  engine: 'mathjax'
+  mathjax:
+    config:
