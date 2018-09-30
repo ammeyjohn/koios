@@ -14,13 +14,10 @@ $$E(y)=E(\beta_0+\beta_1x+\epsilon)=>y=\beta_0+\beta_1x$$
 
 # 最小二乘估计(Least Square Estimation, OLE)
 
-$$Q(\beta_0,\beta_1)=\sum_{i=1}^n[y_1-E(y_1)]^2=\sum_{i=1}^n(y_1-\beta_0-\beta_1x_i)^2$$
-
-$$
-\frac{\partial Q}{\partial\beta_0}|_{\beta_0=\hat{\beta_0}}=-2\sum_{i=1}^n(y_1-\hat{\beta_0}-\hat{\beta_1}x_i)=0
-$$
-$$
-\frac{\partial Q}{\partial\beta_0}|_{\beta_0=\hat{\beta_0}}=-2\sum_{i=1}^n(y_1-\hat{\beta_0}-\hat{\beta_1}x_i)=0
-$$
+![](/images/ole.png)
 
 # 最大似然估计(Maximum Likelihood Estimation, MLE)
+
+> 解决“模型已定，参数未知”的问题。即用已知样本的结果，去反推既定模型中的参数最可能的。
+
+![](/images/mle.png)
