@@ -44,7 +44,7 @@ tags: tensorflow,识别
 
 评分表格式是固定的，考虑到每场比赛人数多少的因素，表格的布局会有所差异。评分表分为2页，第一页包括页标题、场次描述和选手评分区域；第二页少了标题、场次描述部分，如下图所示。
 
-![ss](基于Tensorflow的比赛成绩自动识别服务/2.png)
+{% asset_img 2.png 评分表样式 %}
 
 3. **照片中评分表的校正**
 
@@ -54,7 +54,7 @@ tags: tensorflow,识别
 
 评委来自于不同国家，不同文化、不同书写习惯使评委书写的数字风格迥异，书写的数字的可识别性也大相径庭。如下图所示：
 
-![ss](基于Tensorflow的比赛成绩自动识别服务/3.png)
+{% asset_img 3.png 不同书写风格的成绩 %}
 
 使用机器学习领域十分有名的MNIST数据集进行训练，由于其数据量少（训练集60000，测试集10000），识别的效果并不理想。因此我使用由Facebook公开的[qmnist](https://github.com/facebookresearch/qmnist)(https://github.com/facebookresearch/qmnist)数据集，其包含402953张手写数字的图片。使用qmnist数据集对模型进行训练后，可以得到不错的识别率。
 
@@ -118,7 +118,7 @@ cond(yes)->op_score_cut->op_score_recognize->ed
 
 - 表格的定位和提取，从原始图片中将A4纸进行标准化，校正表格的角度，从图片中提取表格区域；完成后的对比图如下，左图为原始的图片，右图为校正后的图片。
 
-![ss](基于Tensorflow的比赛成绩自动识别服务/1.jpg)
+{% asset_img 1.jpg 表格提取结果 %}
 
 - 通过表格中的行与行之间的线，提取表格中的每一行；对行进行角度校正；
 - 通过表格中的列于列之间的线，提取“序号列”和“评分列”；
@@ -149,7 +149,8 @@ edges_img = cv2.dilate(edges_img, kernel, iterations=5)
 
 由于表格线存在一定的宽度，从Canny中提取的图像边缘的图片存在间隙，因此需要将图片进行一次膨胀操作，使直线都连成一块，方便后续识别边框。处理后的图片如图所示：
 
-![ss](基于Tensorflow的比赛成绩自动识别服务/4.png)![ss](基于Tensorflow的比赛成绩自动识别服务/5.png)
+{% asset_img 4.png Canny边缘提取 %} 
+{% asset_img 5.png 边缘膨胀 %}
 
 从图片中提取表格区域。这部分比较简单，OpenCV自带的findContours方法就可以找到图片中的轮廓。由于我们只关系表格周围的轮廓，因此使用RETR_EXTERNAL参数，只范围最外层的轮廓，所有子轮廓都将被忽略。
 
@@ -160,7 +161,7 @@ contours, _ = cv2.findContours(edges_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SI
 cnt = max(contours, key=lambda cnt: cv2.contourArea(cnt))
 ```
 
-![ss](基于Tensorflow的比赛成绩自动识别服务/6.jpg)
+{% asset_img 6.jpg 表格区域识别和提取 %}
 
 ```python
 # 多变形近似
@@ -233,11 +234,11 @@ M = cv2.getPerspectiveTransform(points1, points2)
 img_processed = cv2.warpPerspective(img, M, (360, 420))
 ```
 
-![Sample](基于Tensorflow的比赛成绩自动识别服务\7.jpg)
+{% asset_img 7.jpg 透视变换示例 %}
 
 有了上面这个示例，透视变换就会比较好理解。在示例中原图中的四个点是确定的，人工按照顺时针排列。而在成绩识别的代码中，这四个点是自动获取的，顺序不可控，所以需要先将这四个点按照左上、左下、右下、右上的顺序排列。变换后图片的宽度和高度可以通过矩形的两点之间的距离公式计算得到。通过透视变换后得到的表格图片如下图所示：
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/table_img.jpg)
+{% asset_img table_img.jpg 表格提取结果 %}
 
 ### 表格行提取
 
@@ -267,7 +268,7 @@ img_table_thresh = preprocess.threshold(img_table, block_size=25, c=30)
 utils.save_image('output/img_table_thresh.jpg', img_table_thresh)    
 ```
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_table_thresh.jpg)
+{% asset_img img_table_thresh.jpg 表格二值化 %}
 
 行的提取方法是分别对二值化后的表格图片进行纵向和横向的腐蚀和膨胀操作，使操作后的图片只显示竖线或者横线（如图所示），并将这2张图片进行按位与操作，即求得横线和竖线之间的交点，并获取交点坐标。
 
@@ -334,11 +335,13 @@ x_lines = filter_lines(xs)
 
 下图为实际运行结果，从左到右依次为，行提取、列提取、行列交点
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/rows.png)![Image](基于Tensorflow的比赛成绩自动识别服务/cols.png)![Image](基于Tensorflow的比赛成绩自动识别服务/intersections.jpg)
+{% asset_img rows.png 横线识别 %}
+{% asset_img cols.png 竖线识别 %}
+{% asset_img intersections.jpg 交点识别 %}
 
 下图为使用`x_lines`中的坐标在表格图片中描出行后的图片。
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_table_lined.jpg)
+{% asset_img img_table_lined.jpg 行识别 %}
 
 从图片中可以看到识别出来的行还存在几个问题：
 
@@ -350,7 +353,7 @@ x_lines = filter_lines(xs)
 
 > 在这里补充一下之前进行的尝试，在提取行的时候，由于行和列的坐标点已经都获取到了（代码中的xs和ys），其实可以直接在表格图片中将表格中的单元格都一次性切出来，如下图：
 >
-> ![Image](基于Tensorflow的比赛成绩自动识别服务/img_table_lined2.jpg)
+> {% asset_img img_table_lined2.jpg 行列边界和交点 %}
 >
 > 但是这样处理会存在一些问题，比如行无法进行角度校正，所以会导致部分数字被切掉一点（第一行的87分的成绩）；表格上面三行的列没有与成绩部分的列对齐，所以在包含上面三行的情况下，下半部分的有些列被切多了，如果只提取序号和成绩那么并不影响，但是如果需要提取所属团队或者曲目的时候就会发现这2列被一切为2了。
 >
@@ -381,11 +384,11 @@ for img_row, img_i in cut_image_rows(img_table, x_lines, 10):
 
 这里使用之前提取的行坐标，将表格中的每一行单独切分为小图片，由于表格的前三行比其他行宽，这里使用宽度把前三行过滤掉。下图看上去还是比较规整的，角度也基本上是水平的。
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_row.jpg)
+{% asset_img img_row.jpg 行提取 %}
 
 而下面这张图并不是那么规整，行线在右侧有点上翘，数字87由于太贴近上边缘，使数字7被切掉了一点。
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_row_3.jpg)
+{% asset_img img_row_3.jpg 行提取 %}
 
 为了保证切取得每一行都是尽量水平的，并且能保留尽量完整的数字，需要对每一张行图片进行角度校正。校正的方法是先用之前的recognize_rows方法提取行图片中的横线，由于切图的时候会在上下各增加10个像素的边界，所以一般切图后的图片中都会带有表格边线，至少会有一条边线。然后使用霍夫变换方法HoughLinesP识别横线，提取这条横线的坐标后既可以用角度公式计算这条直线的倾斜角度，根据这个角度旋转图片即可。
 
@@ -441,7 +444,7 @@ img_row_rotated, angle = preprocess.angle_correct(img_row)
 
 下图为校正后的行图片，可以看到经过校正后图片还是比较平整的，原来被切掉的数字7也比之前有所改观。
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_row_3_rotated.jpg)
+{% asset_img img_row_3_rotated.jpg 行角度矫正 %}
 
 将行图片当成只有一行的表格，使用之前识别表格的方式提取行列的交叉点，区别是这次使用列坐标，识别行中的列。
 
@@ -462,7 +465,7 @@ y_lines = filter_lines(ys)
 
 这里作了一个小的处理，由于在切行图片的时候不能保证一定会有上下两条行边线，导致无法准确提取行列交点，所以我手工在行图片的上下两端分别绘制两条行的边线，来替代原始的行边线，这样可以保证准确的获取行和列的交点坐标。分别将行、列以及交点绘制到图片上，可以看到如下输出结果：
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_row_3_inter.jpg)
+{% asset_img img_row_3_inter.jpg 单元格识别 %}
 
 列的坐标点准确识别后，提取每一列还是比较容易的。由于需求上我们只需要第一列（序号列）和最后一列（成绩列），因此我们只需要分别获取前2个坐标和后2个坐标即可。
 
@@ -475,7 +478,7 @@ img_cell_id = img_row_rotated[:, y_lines[0]:y_lines[1]]
 img_cell_score = img_row_rotated[:, y_lines[-2]:y_lines[-1]]
 ```
 
-![Image](基于Tensorflow的比赛成绩自动识别服务/img_cells.png)
+{% asset_img img_cells.jpg 序号列和成绩列提取 %}
 
 到这里我们已经成功提取了图片中序号列和成绩列。由于序号是印刷体，而成绩属于手写体，需要采用不同的方法来识别这2类数字。针对印刷体，我们采用Tesseract-OCR来识别；手写体的数字采用深度学习的方法来提取。
 
